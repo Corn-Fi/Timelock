@@ -9,24 +9,21 @@ const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
 const account = new ethers.Wallet(process.env.PRIVATE_KEY);
 const signer = account.connect(provider);
 
-async function main() {
-  // Hardhat always runs the compile task when running scripts with its command
-  // line interface.
-  //
-  // If this script is run directly using `node` you may want to call compile
-  // manually to make sure everything is compiled
-  // await hre.run('compile');
 
+async function deployTimelock(delaySeconds, proposers, executors) {
   const Timelock = await ethers.getContractFactory("Timelock");
-
-  const timelock = await Timelock.deploy(30, [signer.address], [signer.address]);
-  
+  const timelock = await Timelock.deploy(delaySeconds, proposers, executors);
   const tl = await timelock.deployed();
-
   console.log(`
     Timelock deployed at ${tl.address}
   `);
 }
+
+
+async function main() {
+  await deployTimelock(30, [signer.address], [signer.address]);
+}
+
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.

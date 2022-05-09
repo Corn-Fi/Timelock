@@ -26,15 +26,9 @@ async function grantRole(_timelock, role, account) {
   await _timelock.grantRole(role, account);
 }
 
-async function grantRole(_timelock, role, account) {
-  await _timelock.grantRole(role, account);
-}
-
 async function revokeRole(_timelock, role, account) {
   await _timelock.revokeRole(role, account);
 }
-
-
 
 // ----------------------------------------------------------------------------------
 
