@@ -5,6 +5,10 @@
 // Runtime Environment's members available in the global scope.
 const hre = require("hardhat");
 
+const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
+const account = new ethers.Wallet(process.env.PRIVATE_KEY);
+const signer = account.connect(provider);
+
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
   // line interface.
@@ -13,13 +17,15 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
-  // We get the contract to deploy
-  const Greeter = await hre.ethers.getContractFactory("Greeter");
-  const greeter = await Greeter.deploy("Hello, Hardhat!");
+  const Timelock = await ethers.getContractFactory("Timelock");
 
-  await greeter.deployed();
+  const timelock = await Timelock.deploy(30, [signer.address], [signer.address]);
+  
+  const tl = await timelock.deployed();
 
-  console.log("Greeter deployed to:", greeter.address);
+  console.log(`
+    Timelock deployed at ${tl.address}
+  `);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
