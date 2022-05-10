@@ -4,6 +4,7 @@
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 const hre = require("hardhat");
+const { addresses } = require("./addresses");
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
 const account = new ethers.Wallet(process.env.PRIVATE_KEY);
@@ -19,9 +20,18 @@ async function deployTimelock(delaySeconds, proposers, executors) {
   `);
 }
 
+async function polygonScanVerify(contractAddress, args, contractPath) {
+  await hre.run("verify:verify", {
+    address: contractAddress,
+    constructorArguments: args,
+    contract: contractPath
+  });
+}
+
 
 async function main() {
-  await deployTimelock(30, [signer.address], [signer.address]);
+  // await deployTimelock(86400, [signer.address, addresses.devTreasury], [signer.address, addresses.devTreasury]);
+  await polygonScanVerify(addresses.timelock, [86400, [signer.address, addresses.devTreasury], [signer.address, addresses.devTreasury]], "contracts/Timelock.sol:Timelock");
 }
 
 
