@@ -30,8 +30,24 @@ async function polygonScanVerify(contractAddress, args, contractPath) {
 
 
 async function main() {
-  // await deployTimelock(86400, [signer.address, addresses.devTreasury], [signer.address, addresses.devTreasury]);
-  await polygonScanVerify(addresses.timelock, [86400, [signer.address, addresses.devTreasury], [signer.address, addresses.devTreasury]], "contracts/Timelock.sol:Timelock");
+  // await deployTimelock(
+  //   86400,                     // 24 hour delay
+  //   [addresses.devTreasury],   // Gnosis safe is proposer
+  //   [addresses.devTreasury]    // Gnosis safe is executor
+  // );
+
+  // NOTE: It is recommended to revoke TIMELOCK_ADMIN_ROLE from the deployer
+  // since the role is automatically granted upon deployment.
+  
+  await polygonScanVerify(
+    addresses.timelock, 
+    [
+      86400, 
+      [signer.address, addresses.devTreasury], 
+      [signer.address, addresses.devTreasury]
+    ], 
+    "contracts/Timelock.sol:Timelock"
+  );
 }
 
 
